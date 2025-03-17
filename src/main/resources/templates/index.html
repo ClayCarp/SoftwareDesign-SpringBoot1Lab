@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Task Checker</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <h1>Task Checker</h1>
+    
+    <form class="formClass" action="/task" method="POST">
+        <div class="input-group">
+            <label for="taskDesc">Task</label>
+            <input type="text" id="taskDesc" name="description" placeholder="Enter task description" required>
+            <label for="taskTime">Time to Complete</label>
+            <input type="datetime-local" id="taskTime" name="targetTime" required>
+        <button type="submit">Add Task</button>
+        </div>
+    </form>
+
+    <div class="task-list">
+        <h2>Tasks:</h2>
+        <ul>
+            <li th:each="task : ${tasks}">
+                <div class="task-info">
+                    <span th:text="${task.description}" th:class="${task.completed ? 'completed' : ''}"></span>
+                    <span class="time" th:text="${#temporals.format(task.targetCompletionTime, 'MM/dd/yyyy HH:mm')}"></span>
+                </div>
+                <div class="button-group">
+                    <form th:action="@{/task/{id}/toggle(id=${task.id})}" method="POST" style="display: inline;">
+                        <button type="submit" th:text="${task.completed ? 'Undo' : 'Complete'}">Toggle</button>
+                    </form>
+                    <form th:action="@{/task/{id}/delete(id=${task.id})}" method="POST" style="display: inline;">
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
